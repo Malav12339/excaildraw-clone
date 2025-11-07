@@ -1,9 +1,12 @@
 interface InputBox {
-    text: string
+    placeholder: string,
+    inputValue: string,
+    onChangeFn: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export function Input({ text } : InputBox) {
+export function Input({ placeholder, onChangeFn, inputValue } : InputBox) {
     return <input 
-    className="border border-red-500 px-2 py-1"
-    type="text" placeholder={text} />
+    className="border p-2 rounded"
+    type="text" placeholder={placeholder} value={inputValue}
+    onChange={onChangeFn} />
 }

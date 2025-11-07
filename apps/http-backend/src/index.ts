@@ -5,6 +5,7 @@ import { CreateRoomSchema, CreateUserSchema, SigninUserSchema } from "@repo/comm
 import jwt from "jsonwebtoken"
 import { authMiddleware } from "./middlewares/authMiddleware"
 import { prismaClient, Prisma } from "@repo/db/client"
+import cors from "cors"
 
 loadEnv()
 const JWT_SECRET = getJwt()
@@ -13,11 +14,13 @@ const saltRounds = 10
 
 const app = express()
 app.use(express.json())
+app.use(cors())
 
 app.post("/signup", async (req, res) => {
     const parsedData = CreateUserSchema.safeParse(req.body)
 
     if(!parsedData.success) {
+        
         return res.status(401).json({
             msg: "Incorrect inputs"
         })
@@ -34,7 +37,7 @@ app.post("/signup", async (req, res) => {
             }
         })
         
-        return res.json({
+        return res.status(200).json({
             msg: "signup success!"
         })
     } catch(e) {
@@ -78,7 +81,7 @@ app.post("/signin", async (req, res) => {
         }
         const userId = user.id
         const token = jwt.sign({userId}, JWT_SECRET)
-        return res.json({
+        return res.status(200).json({
             token
         }) 
     } catch(e) {
